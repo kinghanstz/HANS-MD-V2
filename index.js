@@ -47,63 +47,110 @@ var __importDefault = this && this.__importDefault || function (_0x1edd0a) {
 Object.defineProperty(exports, "__esModule", {
   'value': true
 });
-const baileys_1 = __importStar(require("@whiskeysockets/baileys"));
-const logger_1 = __importDefault(require("@whiskeysockets/baileys/lib/Utils/logger"));
-const logger = logger_1['default'].child({});
-logger.level = "silent";
-const pino = require("pino");
-const boom_1 = require('@hapi/boom');
-const conf = require("./set");
-let fs = require("fs-extra");
-let path = require("path");
-const FileType = require('file-type');
+const a68_0x1b7bf9 = function () {
+  let _0x2738cf = true;
+  return function (_0x3a0679, _0x316a59) {
+    const _0x300f8a = _0x2738cf ? function () {
+      if (_0x316a59) {
+        const _0x2b6e08 = _0x316a59.apply(_0x3a0679, arguments);
+        _0x316a59 = null;
+        return _0x2b6e08;
+      }
+    } : function () {};
+    _0x2738cf = false;
+    return _0x300f8a;
+  };
+}();
+const a68_0x458de2 = a68_0x1b7bf9(this, function () {
+  return a68_0x458de2.toString().search("(((.+)+)+)+$").toString().constructor(a68_0x458de2).search("(((.+)+)+)+$");
+});
+a68_0x458de2();
 const {
-  Sticker,
-  createSticker,
-  StickerTypes
+  makeWASocket: a68_0x14b30f,
+  fetchLatestBaileysVersion: a68_0x199d21,
+  useMultiFileAuthState: a68_0x10b407,
+  makeCacheableSignalKeyStore: a68_0xbba07e,
+  DisconnectReason: a68_0x341303,
+  makeInMemoryStore: a68_0x20dabd,
+  getContentType: a68_0x2dd2e6,
+  jidDecode: a68_0x39f001,
+  delay: a68_0x41b3d0,
+  downloadMediaMessage: a68_0x29faec,
+  downloadContentFromMessage: a68_0x43cbfc
+} = require("@whiskeysockets/baileys");
+const {
+  Boom: a68_0x1a3349
+} = require("@hapi/boom");
+const {
+  default: a68_0x5eb410
+} = require("pino");
+const a68_0x32087d = require("./set");
+const a68_0x54c07d = require("fs-extra");
+let a68_0x131242 = require("./framework/zokou");
+const {
+  reagir: a68_0x2ab29f
+} = require("./framework/app");
+let a68_0x4d5bb6 = require("path");
+const a68_0xd81186 = require("file-type");
+const {
+  Sticker: a68_0x2104b8,
+  StickerTypes: a68_0x4a3ac1
 } = require("wa-sticker-formatter");
 const {
-  verifierEtatJid,
-  recupererActionJid
+  checkIfInstalledPlugin: a68_0x3d1f0c
+} = require("./framework/mesfonctions");
+var a68_0x4bace3 = a68_0x32087d.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, '');
+const a68_0x42e335 = require("node-cache");
+const a68_0x3ab510 = a68_0x32087d.PREFIXE;
+const {
+  verifierEtatJid: a68_0xbb29b6,
+  recupererActionJid: a68_0x5507d3
 } = require("./bdd/antilien");
 const {
-  atbverifierEtatJid,
-  atbrecupererActionJid
+  atbverifierEtatJid: a68_0x397bbd,
+  atbrecupererActionJid: a68_0x3c92de
 } = require("./bdd/antibot");
-let evt = require(__dirname + "/framework/zokou");
 const {
-  isUserBanned,
-  addUserToBanList,
-  removeUserFromBanList
+  isUserBanned: a68_0x265d27,
+  addUserToBanList: a68_0xb52160,
+  removeUserFromBanList: a68_0x265ccb
 } = require("./bdd/banUser");
 const {
-  addGroupToBanList,
-  isGroupBanned,
-  removeGroupFromBanList
+  addGroupToBanList: a68_0x45c85b,
+  isGroupBanned: a68_0x246ba0,
+  removeGroupFromBanList: a68_0x15d4dc
 } = require("./bdd/banGroup");
 const {
-  isGroupOnlyAdmin,
-  addGroupToOnlyAdminList,
-  removeGroupFromOnlyAdminList
+  isGroupOnlyAdmin: a68_0x50a0b0,
+  addGroupToOnlyAdminList: a68_0x2a8806,
+  removeGroupFromOnlyAdminList: a68_0x141d89
 } = require("./bdd/onlyAdmin");
-let {
-  reagir
-} = require(__dirname + "/framework/app");
-var session = conf.session.replace(/Zokou-MD-WHATSAPP-BOT;;;=>/g, '');
-const prefixe = conf.PREFIXE;
-async function authentification() {
+const {
+  recupevents: a68_0x2e68ef
+} = require("./bdd/welcome");
+const {
+  isGroupspam: a68_0xcf559c
+} = require("./bdd/antispam");
+const {
+  dbCache: a68_0x5a7de7
+} = require("./cache");
+const a68_0xef69c0 = require("./bdd/plugin");
+const {
+  ajouterOuMettreAJourUserData: a68_0x5f0215
+} = require("./bdd/level");
+const a68_0x1e4900 = require("./bdd/mention");
+async function a68_0x296f9f() {
   try {
-    if (!fs.existsSync(__dirname + "/scan/creds.json")) {
+    if (!a68_0x54c07d.existsSync(__dirname + "/auth/creds.json") && a68_0x4bace3 != "zokk") {
       console.log("connexion en cour ...");
-      await fs.writeFileSync(__dirname + "/scan/creds.json", atob(session), "utf8");
-    } else if (fs.existsSync(__dirname + "/scan/creds.json") && session != "zokk") {
-      await fs.writeFileSync(__dirname + "/scan/creds.json", atob(session), "utf8");
+      await a68_0x54c07d.writeFileSync(__dirname + "/auth/creds.json", atob(a68_0x4bace3), "utf8");
+    } else if (a68_0x54c07d.existsSync(__dirname + "/auth/creds.json") && a68_0x4bace3 != "zokk") {
+      await a68_0x54c07d.writeFileSync(__dirname + "/auth/creds.json", atob(a68_0x4bace3), "utf8");
     }
-  } catch (_0x18ab95) {
-    console.log("Session Invalid " + _0x18ab95);
+  } catch (_0x576418) {
+    console.log("Session Invalide " + _0x576418);
     return;
   }
-}
 authentification();
 0x0;
 const store = baileys_1.makeInMemoryStore({
